@@ -22,6 +22,8 @@ my $indir = `pwd`;
 # 测试模式-加上本地地址
 # $indir = '/Users/sen/tools/txt2wiki/xml_text/';
 
+print "\t森亮号见识整合水手\t\n";
+
 # 这是做了啥-去除了换行字符等东西
 chomp $indir;
 my $infile;
@@ -31,9 +33,9 @@ my $comment = '来自TextMate的见识建造!由mediawiki2wiki.pl生产xml';
 # 处理了几个文件
 my $counts = 0;
 # 最终固定输出文件名
-$outfile = "SLboat_Seeing.xml";
+$outfile = "SLboat_SEEING.xml";
 # 提醒开始干活
-print "\nStart work with the txt file...\n\n";
+print "\n开始整合见识文件...\n\n";
 
 # 先打开了目录-看起来是
 opendir(INDIR, $indir) || die "couldn't open $indir for reading";
@@ -42,14 +44,13 @@ opendir(INDIR, $indir) || die "couldn't open $indir for reading";
 open(OUT, ">$outfile") || die "couldn't open $outfile for write";
 # 输出头部
 &printxmlheader();
+# 读取检查每一个文件
 while($infile = readdir(INDIR)) {
+	# 没有后缀[.]除掉
 	next if ($infile =~ /^\./);
 	# 这里是直接跳过已知的
 	next if ($infile =~ /xml$/);
-	print "found $infile...\n";
-	# $outfile =~ s/mediawiki$/xml/;
 	# 提示开始输出
-	print "switch to $infile\n";
 	#反向死亡,死亡是全部退出这很糟糕-或许只需要退出while就够了
 	# 判断是否有效的待转换格式文件
 	next unless ($infile =~ m/mediawiki$/);
@@ -57,7 +58,7 @@ while($infile = readdir(INDIR)) {
 	# 截取标题
 	$title = $infile;
 	$title =~ s/\.mediawiki$//;
-
+	print "\t正在整合第$counts个见识: $title\n";
 	open(IN, "$infile") || die "couldn't open $infile for read";
 
 	&printpagehead ();
@@ -69,7 +70,7 @@ while($infile = readdir(INDIR)) {
 	&printpagefooter();
 	# 关闭所有输出
 	close(IN);
-	print "converted $outfile...\n";
+	# print "converted $outfile...\n";
 	# 好了加一也不错
 	$counts++;
 }
@@ -80,7 +81,7 @@ close(OUT);
 # 关闭目录-为啥要关闭呢
 closedir(INDIR);
 # 告别
-print "\njust done the work!with $counts file in $outfile\n\n";
+print "\n整合见识完毕!这次一共整合了$counts个见识文件\n它们被放置于: $outfile\n\n";
 
 # todo:使用函数一样的玩意改写-page::head
 # page的额头-不能有换行
