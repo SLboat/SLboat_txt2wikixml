@@ -22,7 +22,8 @@ my $infile;
 my $outfile;
 my $title;
 my $comment = '来自TextMate的见识建造!由mediawiki2wiki.pl生产xml。';
-# 不需要id这个玩意了
+# 处理了几个文件
+my $counts = 0;
 
 opendir(INDIR, $indir) || die "couldn't open $indir for reading";
 
@@ -35,8 +36,10 @@ while($infile = readdir(INDIR)) {
 	$outfile =~ s/mediawiki$/xml/;
 	# 提示开始输出
 	print "switch to $outfile\n";
-	# 反向死亡。。。
-	die unless ($outfile =~ m/xml$/);
+	# 反向死亡。。。死亡是全部退出这很糟糕-或许只需要退出while就够了
+
+	next unless ($outfile =~ m/xml$/);
+	
 	# 截取标题
 	$title = $infile;
 	$title =~ s/\.mediawiki$//;
@@ -55,9 +58,13 @@ while($infile = readdir(INDIR)) {
 	close(IN);
 	close(OUT);
 	print "converted $outfile...\n";
-	$id++;
+	# 好了加一也不错
+	$counts++;
 }
+# 关闭目录-为啥要关闭呢
 closedir(INDIR);
+
+print "\njust done the work!with $counts file\n";
 
 # 开始输出头部
 sub printheader {
