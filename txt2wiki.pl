@@ -17,6 +17,11 @@
 use HTML::Entities;
 
 my $indir = `pwd`;
+
+# 测试模式-加上本地地址
+# $indir = '/Users/sen/tools/txt2wiki/xml_text/';
+
+# 这是做了啥
 chomp $indir;
 my $infile;
 my $outfile;
@@ -25,10 +30,14 @@ my $comment = '来自TextMate的见识建造!由mediawiki2wiki.pl生产xml。';
 # 处理了几个文件
 my $counts = 0;
 
+# 提醒开始干活
+print "\nStart work with the txt file...\n\n";
+
 opendir(INDIR, $indir) || die "couldn't open $indir for reading";
 
 while($infile = readdir(INDIR)) {
 	next if ($infile =~ /^\./);
+	# 这里是直接跳过已知的
 	next if ($infile =~ /xml$/);
 	print "found $infile...\n";
 	# 输出文件更改后缀
@@ -36,8 +45,8 @@ while($infile = readdir(INDIR)) {
 	$outfile =~ s/mediawiki$/xml/;
 	# 提示开始输出
 	print "switch to $outfile\n";
-	# 反向死亡。。。死亡是全部退出这很糟糕-或许只需要退出while就够了
-
+	#反向死亡,死亡是全部退出这很糟糕-或许只需要退出while就够了
+	# 在上面已经判断了
 	next unless ($outfile =~ m/xml$/);
 	
 	# 截取标题
@@ -51,7 +60,7 @@ while($infile = readdir(INDIR)) {
 	# 这是转换每一个字节吧
 	while (<IN>) {
 		#print "read a line from $infile\n";
-		print OUT encode_entities($_);
+		print OUT encode_entities($_, '<>&"\'');
 	}
 	&printfooter();
 	# 关闭所有输出
@@ -64,7 +73,7 @@ while($infile = readdir(INDIR)) {
 # 关闭目录-为啥要关闭呢
 closedir(INDIR);
 
-print "\njust done the work!with $counts file\n";
+print "\njust done the work!with $counts file\n\n";
 
 # 开始输出头部
 sub printheader {
