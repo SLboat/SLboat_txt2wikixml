@@ -4,16 +4,14 @@
 
 # 森亮号改造内容：
 ## 增加支持mediawiki的0.8XML语法
-
-# 发现
-## 看起来它是给每个文件转换一个xml-太傻了 
+## 一次性获得所有文件
 
 # todo 
-## 格式完善
-## 整理大量mediawiki文件-那就不需要多个头部了吧
 ## 处理掉文本乱码啥子的
 ## 支持中文文件-非常重要-是的完全支持
+## title支持过滤xml字符
 ## 添加每次提交信息为某次提交
+
 
 use HTML::Entities;
 
@@ -57,9 +55,13 @@ while($infile = readdir(INDIR)) {
 	
 	# 截取标题
 	$title = $infile;
+	# s模式替换源字符串为空白
 	$title =~ s/\.mediawiki$//;
-	print "\t正在整合第$counts个见识: $title\n";
-	open(IN, "$infile") || die "couldn't open $infile for read";
+	# 替换回去mac的冒号
+	$title =~ s/\:/\\/;
+	print "\t正在整合第".($counts+1)."个见识: $title\n";
+	# 处理输入文件
+	open(IN, "$infile") || die "无法打开$infile来进行读取";
 
 	&printpagehead ();
 	# 这是转换每一个字节吧
